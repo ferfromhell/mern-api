@@ -46,12 +46,15 @@ router.post('/', passport.authenticate('jwt', { session: false }),(req, res) => 
       return res.status(400).json(errors);
     }
 
+    // console.log(req.body.draw);
+
     const newPost = new Post({
       text: req.body.text,
       tittle: req.body.tittle,
       name: req.body.name,
       avatar: req.body.avatar,
-      user: req.user.id
+      user: req.user.id,
+      draw: req.body.draw
     });
 
     newPost.save().then(post => res.json(post));

@@ -82,31 +82,29 @@ router.get('/user/:user_id', (req, res) => {
 
 //Create profile
 router.post('/', passport.authenticate('jwt', { session: false }), (req,res) => {
-  // console.log(req.body);
+  console.log(req.body);
   const {errors, isValid} = validateProfileInput(req.body);
   if(!isValid) return res.status(400).json(errors);
 
   const profileFields = {};
   profileFields.user = req.user.id;
   if(req.body.handle) profileFields.handle = req.body.handle;
-  if(req.body.company) profileFields.company = req.body.company;
-  if(req.body.website) profileFields.website = req.body.website;
-  if(req.body.location) profileFields.location = req.body.location;
-  // if(req.body.status) profileFields.status = req.body.status;
-  // if(req.body.bio) profileFields.status = req.body.bio;
+
+  profileFields.company = req.body.company ? req.body.company : '';
+  profileFields.website = req.body.website ? req.body.website : '';
+  profileFields.location = req.body.location ? req.body.location : '';
+  profileFields.bio = req.body.bio ? req.body.bio : '';
   
   if(typeof req.body.skills !== 'undefined'){
     profileFields.skills = req.body.skills.split(',');
   }
 
-  // if(req.body.skills) profileFields.skills = req.body.skills;
-  if(req.body.bio) profileFields.bio = req.body.bio;
-  // if(req.body.status) profileFields.status = req.body.status;
-
   Profile.findOne({ user: req.user.id })
   .then(profile => {
     if(profile){
       //Update
+      console.log('update');
+      console.log(profileFields.website);
       Profile.findOneAndUpdate(
         { user: req.user.id }, 
         { $set: profileFields }, 

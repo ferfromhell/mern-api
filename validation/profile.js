@@ -12,8 +12,10 @@ module.exports = function ValidateProfileInput(data){
   if (!validator.isLength(data.handle, { min: 2, max: 40 })) {
     errors.handle = 'Handle needs to between 2 and 40 characters';
   }
-  if (!validator.isURL(data.website,['http','https','ftp'])) {
-    errors.website = 'Not a valid URL';
+  if(data.website !== ''){
+    if (!validator.isURL(data.website,['http','https','ftp'])) {
+      errors.website = 'Not a valid URL';
+    }
   }
 
   return {
